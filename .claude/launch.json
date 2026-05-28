@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Blaine Portfolio",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/Users/bwohlgemuth/Desktop/Actor Website V2/serve.mjs"],
+      "port": 3000
+    }
+  ]
+}

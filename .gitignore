@@ -1,0 +1,29 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node / npm (if ever used)
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Local screenshot scratch
+temporary screenshots/
+*.log
+
+# Local-only render scaffolding
+render.html
+
+# Environment / secrets
+.env
+.env.*
