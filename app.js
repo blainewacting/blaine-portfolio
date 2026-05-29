@@ -153,4 +153,26 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
     else if (e.key === 'ArrowLeft')  show(current - 1);
     else if (e.key === 'ArrowRight') show(current + 1);
   });
+
+  /* Touch swipe support for mobile */
+  let touchStartX = 0, touchStartY = 0, touchActive = false;
+  lb.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchActive = true;
+  }, { passive: true });
+  lb.addEventListener('touchend', (e) => {
+    if (!touchActive) return;
+    touchActive = false;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStartX;
+    const dy = t.clientY - touchStartY;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) show(current + 1);
+      else        show(current - 1);
+    } else if (dy > 80 && Math.abs(dy) > Math.abs(dx)) {
+      close();
+    }
+  });
 })();

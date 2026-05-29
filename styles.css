@@ -480,3 +480,84 @@ section[id] { scroll-margin-top: 96px; }
 @media (prefers-reduced-motion: reduce) {
   .page-fade-in { animation: none; }
 }
+
+/* ============================================================
+   MOBILE TUNING
+   ============================================================ */
+@media (max-width: 640px) {
+  /* Tagline — was overflowing because of huge letter-spacing */
+  .tagline {
+    font-size: .78rem;
+    letter-spacing: .28em;
+  }
+  .tagline .dot { margin: 0 .35em; }
+
+  /* Footer tagline shrinks too */
+  footer .tagline {
+    font-size: .72rem;
+    letter-spacing: .26em;
+  }
+
+  /* Name heading: keep two lines on the smallest phones, nudge size down */
+  .h-name {
+    letter-spacing: -0.025em;
+  }
+
+  /* Nav rail — pill-style chips on mobile so wraps look intentional */
+  .nav-rail {
+    border-top: none;
+    border-bottom: none;
+    gap: .4rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .nav-link {
+    padding: .5rem .8rem;
+    font-size: .6rem;
+    letter-spacing: .14em;
+    gap: .4rem;
+    border: 1px solid rgba(10,31,51,.18);
+    background: rgba(255,255,255,.6);
+  }
+  .nav-link + .nav-link { border-left: 1px solid rgba(10,31,51,.18); }
+  .nav-link .num { font-size: .54rem; }
+  .nav-link::before { display: none; }
+  .nav-link.is-active {
+    background: #0a1f33;
+    color: #ffffff;
+    border-color: #0a1f33;
+  }
+  .nav-link.is-active .num { color: #a8c4dc; }
+
+  /* Resume PDF embed: iOS Safari can't render <object>/<iframe> PDFs reliably.
+     Hide the iframe and show a friendly tap-to-open card instead. */
+  .resume-frame {
+    aspect-ratio: auto;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.25rem;
+  }
+  .resume-frame object,
+  .resume-frame iframe { display: none; }
+  .resume-frame::before {
+    content: "Tap “Download Resume” above to open the PDF.";
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: .8rem;
+    letter-spacing: .04em;
+    line-height: 1.7;
+    color: #2f5a85;
+    max-width: 28ch;
+  }
+
+  /* Allow long button labels to wrap rather than overflow on phones */
+  .btn { white-space: normal; line-height: 1.2; }
+
+  /* Lightbox close/arrows pulled in slightly for thumb reach */
+  .lightbox-prev { left: 2vw; }
+  .lightbox-next { right: 2vw; }
+  .lightbox-close { right: 2vw; top: 2vh; }
+  .lightbox-img { max-width: 94vw; }
+}
