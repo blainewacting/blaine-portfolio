@@ -90,14 +90,72 @@
     </div>
 
     <div class="mt-14 reveal reveal-d2">
-      <figure class="resume-frame shadow-frame">
-        <object data="/brand_assets/resume/resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" type="application/pdf" aria-label="Blaine Wohlgemuth resume">
-          <iframe src="/brand_assets/resume/resume.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" title="Blaine Wohlgemuth resume" loading="lazy"></iframe>
-        </object>
+      <figure class="resume-frame shadow-frame" id="resume-frame" aria-label="Blaine Wohlgemuth resume">
+        <canvas id="resume-canvas" role="img" aria-label="Blaine Wohlgemuth resume"></canvas>
+        <noscript>
+          <a href="/brand_assets/resume/resume.pdf" target="_blank" rel="noopener" class="resume-fallback">
+            View Resume PDF
+          </a>
+        </noscript>
       </figure>
     </div>
   </div>
 </section>
+
+<!-- ============== PDF.js (renders the resume directly to a canvas) ============== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  (function () {
+    if (typeof pdfjsLib === 'undefined') return;
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const canvas = document.getElementById('resume-canvas');
+    const frame  = document.getElementById('resume-frame');
+    if (!canvas || !frame) return;
+
+    let pdfPage = null;
+    let renderTask = null;
+
+    function render() {
+      if (!pdfPage) return;
+      if (renderTask) renderTask.cancel();
+
+      const containerWidth = frame.clientWidth || 800;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const baseViewport = pdfPage.getViewport({ scale: 1 });
+      const scale = (containerWidth / baseViewport.width) * dpr;
+      const viewport = pdfPage.getViewport({ scale });
+
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      canvas.style.width = '100%';
+      canvas.style.height = 'auto';
+
+      const ctx = canvas.getContext('2d');
+      renderTask = pdfPage.render({ canvasContext: ctx, viewport });
+      renderTask.promise.catch(() => {});
+    }
+
+    pdfjsLib.getDocument('/brand_assets/resume/resume.pdf').promise
+      .then((pdf) => pdf.getPage(1))
+      .then((page) => {
+        pdfPage = page;
+        render();
+        // Re-render at sharp resolution if window resizes (debounced)
+        let t = null;
+        window.addEventListener('resize', () => {
+          clearTimeout(t);
+          t = setTimeout(render, 200);
+        });
+      })
+      .catch(() => {
+        // Graceful fallback: link to the PDF if PDF.js fails
+        frame.innerHTML =
+          '<a href="/brand_assets/resume/resume.pdf" target="_blank" rel="noopener" class="resume-fallback">View Resume PDF</a>';
+      });
+  })();
+</script>
 
 <!-- ============== FOOTER ============== -->
 <footer class="relative z-10 bg-ink text-pearl/70 py-14">
